@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DES Encryption Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+  body {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    width: 320px;
+    text-align: center;
+  }
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 8px #2575fc;
+    background: #eaf1fc;
+    color: #000;
+  }
+  button {
+    background-color: #2575fc;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  button:hover {
+    background-color: #1755c1;
+  }
+  h3 {
+    margin-top: 30px;
+    font-weight: 700;
+  }
+  p {
+    background: #1e1e1e;
+    padding: 12px 15px;
+    border-radius: 8px;
+    word-wrap: break-word;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>DES Encryption Demo</h2>
+
+    <label for="key">Enter 8-byte key (e.g. "abcdefgh"):</label>
+    <input type="text" id="key" maxlength="8" />
+
+    <label for="message">Enter 8-byte message (e.g. "security"):</label>
+    <input type="text" id="message" maxlength="8" />
+
+    <button onclick="encryptDecrypt()">Encrypt and Decrypt</button>
+
+    <h3>Result:</h3>
+    <p id="encrypted"></p>
+    <p id="decrypted"></p>
+  </div>
+
+<script>
+function encryptDecrypt() {
+    const key = document.getElementById('key').value;
+    const message = document.getElementById('message').value;
+
+    if (key.length !== 8) {
+        alert('Key must be exactly 8 characters.');
+        return;
+    }
+    if (message.length !== 8) {
+        alert('Message must be exactly 8 characters.');
+        return;
+    }
+
+    const keyWA = CryptoJS.enc.Utf8.parse(key);
+    const messageWA = CryptoJS.enc.Utf8.parse(message);
+
+    const encrypted = CryptoJS.DES.encrypt(messageWA, keyWA, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+
+    document.getElementById('encrypted').innerText = "Encrypted (Base64): " + encrypted.toString();
+
+    const decrypted = CryptoJS.DES.decrypt(encrypted, keyWA, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    document.getElementById('decrypted').innerText = "Decrypted message: " + decryptedText;
+}
+</script>
+
+</body>
+</html>
